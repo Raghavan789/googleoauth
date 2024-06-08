@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google OAuth2 with Passport</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #56ccf2 0%, #2f80ed 50%, #ff6e7f 100%);
+            color: #fff;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+            color: #fff;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            margin-top: 1rem;
+            font-size: 1.25rem;
+            color: #2f80ed;
+            background-color: #fff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s, transform 0.3s;
+        }
+        .btn:hover {
+            background-color: #ff6e7f;
+            color: #fff;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Google OAuth2 with Passport</h1>
+        <a class="btn" href="/auth/google">Login with Google</a>
+    </div>
+</body>
+</html>
