@@ -1,15 +1,32 @@
+// index.js
 const express = require('express');
 const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
+const mysql = require('mysql');
 const app = express();
-require('./auth'); // Import your authentication setup
+require('dotenv').config(); // Load environment variables
 
-function isloggedin(req, res, next) {
-    req.user ? next() : res.sendStatus(401);
-}
+// Create the MySQL connection
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '', // Replace with your MySQL password
+    database: 'mydatabase'
+});
 
-// Session middleware
+// Connect to MySQL
+db.connect((err) => {
+    if (err) {
+        console.error('Error connecting to MySQL:', err);
+        process.exit(1);
+    }
+    console.log('Connected to MySQL');
+});
+
+// Import passport setup and authentication
+require('./auth')(passport, db);
+
 app.use(session({
     secret: 'mysecret',
     resave: false,
@@ -18,12 +35,13 @@ app.use(session({
 }));
 
 app.use(passport.initialize());
-app.set('view engine', 'ejs'); // Set the view engine to ejs
-app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from the "public" directory
+app.use(passport.session());
 
-// Define routes
+app.set('view engine', 'ejs');
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.get('/', (req, res) => {
-    res.render('index'); // Render the index.ejs file
+    res.render('index');
 });
 
 app.get('/auth/google',
@@ -45,12 +63,15 @@ app.get('/auth/google/success', (req, res) => {
     res.send("Authentication successful");
 });
 
-app.get('/auth/protected', isloggedin, (req, res) => {
-    let name = req.user.displayName; // Corrected typo from "displayNmae" to "displayName"
-    res.send(`Hello ${name}, you are logged in.`);
+function isLoggedIn(req, res, next) {
+    req.user ? next() : res.sendStatus(401);
+}
+
+app.get('/auth/protected', isLoggedIn, (req, res) => {
+    let name = req.user.display_name;
+    res.send(`Hello ${name}, you are logged in.`); // Change to display_name
 });
 
-// Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
